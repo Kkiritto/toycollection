@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ toy.title }} — ToyVault{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Главная</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'toy_list' %}">Каталог</a></li>
+        <li class="breadcrumb-item active">{{ toy.title }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow border-0">
+            {% if toy.image %}
+                <img src="{{ toy.image.url }}" class="card-img-top" alt="{{ toy.title }}" style="max-height: 500px; object-fit: cover;">
+            {% else %}
+                <div class="no-image" style="height: 400px; font-size: 8rem;">🧸</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <span class="badge bg-warning mb-2">{{ toy.get_rarity_display }}</span>
+        <h1>{{ toy.title }}</h1>
+        <p class="text-muted">{{ toy.brand.name }} • {{ toy.category.name }}</p>
+
+        <h3 class="text-primary my-4">{{ toy.estimated_price }} ₽</h3>
+
+        <table class="table table-borderless">
+            <tr>
+                <th>Год выпуска:</th>
+                <td>{{ toy.year }}</td>
+            </tr>
+            <tr>
+                <th>Состояние:</th>
+                <td>{{ toy.get_condition_display }}</td>
+            </tr>
+            <tr>
+                <th>Бренд:</th>
+                <td>{{ toy.brand.name }}</td>
+            </tr>
+            <tr>
+                <th>Категория:</th>
+                <td>{{ toy.category.name }}</td>
+            </tr>
+        </table>
+
+        <div class="card bg-light border-0 p-3 mt-3">
+            <h5>📝 Описание</h5>
+            <p class="mb-0">{{ toy.description }}</p>
+        </div>
+
+        <a href="{% url 'toy_list' %}" class="btn btn-outline-secondary mt-4">
+            <i class="bi bi-arrow-left"></i> Назад к каталогу
+        </a>
+    </div>
+</div>
+{% endblock %}

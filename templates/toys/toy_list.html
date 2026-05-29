@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Каталог игрушек — ToyVault{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">📋 Каталог игрушек</h1>
+
+<div class="row">
+    <div class="col-lg-3 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">🔍 Фильтры</h5>
+                <form method="get">
+                    <div class="mb-3">
+                        <label class="form-label">Поиск</label>
+                        <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Название...">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Бренд</label>
+                        <select name="brand" class="form-select">
+                            <option value="">Все бренды</option>
+                            {% for brand in brands %}
+                                <option value="{{ brand.slug }}" {% if selected_brand == brand.slug %}selected{% endif %}>
+                                    {{ brand.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Категория</label>
+                        <select name="category" class="form-select">
+                            <option value="">Все категории</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.slug }}" {% if selected_category == cat.slug %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Редкость</label>
+                        <select name="rarity" class="form-select">
+                            <option value="">Любая</option>
+                            {% for value, label in rarities %}
+                                <option value="{{ value }}" {% if selected_rarity == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Применить</button>
+                    <a href="{% url 'toy_list' %}" class="btn btn-outline-secondary w-100 mt-2">Сбросить</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        <p class="text-muted">Найдено: <strong>{{ toys.count }}</strong></p>
+        <div class="row g-4">
+            {% for toy in toys %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card toy-card h-100 shadow-sm position-relative">
+                        <span class="badge bg-warning rarity-badge">{{ toy.get_rarity_display }}</span>
+                        {% if toy.image %}
+                            <img src="{{ toy.image.url }}" alt="{{ toy.title }}">
+                        {% else %}
+                            <div class="no-image">🧸</div>
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ toy.title }}</h5>
+                            <p class="card-text text-muted small">
+                                {{ toy.brand.name }} • {{ toy.year }}
+                            </p>
+                            <p class="card-text fw-bold text-primary">{{ toy.estimated_price }} ₽</p>
+                            <a href="{% url 'toy_detail' toy.slug %}" class="btn btn-outline-primary btn-sm">
+                                Подробнее <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        По заданным фильтрам игрушек не найдено.
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

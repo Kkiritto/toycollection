@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная — ToyVault{% endblock %}
+
+{% block content %}
+<div class="text-center py-5 mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 16px;">
+    <h1 class="display-4 fw-bold">🧸 Добро пожаловать в ToyVault!</h1>
+    <p class="lead">Каталог и управление коллекцией игрушек</p>
+    <a href="{% url 'toy_list' %}" class="btn btn-light btn-lg mt-3">
+        <i class="bi bi-grid"></i> Открыть каталог
+    </a>
+</div>
+
+<div class="row text-center mb-5">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm p-4">
+            <h2 class="display-5 text-primary">{{ total_toys }}</h2>
+            <p class="text-muted mb-0">Игрушек в базе</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm p-4">
+            <h2 class="display-5 text-success">{{ total_brands }}</h2>
+            <p class="text-muted mb-0">Брендов</p>
+        </div>
+    </div>
+</div>
+
+<h3 class="mb-4">Недавно добавленные</h3>
+<div class="row g-4">
+    {% for toy in latest_toys %}
+        <div class="col-md-4 col-lg-4">
+            <div class="card toy-card h-100 shadow-sm position-relative">
+                <span class="badge bg-warning rarity-badge">{{ toy.get_rarity_display }}</span>
+                {% if toy.image %}
+                    <img src="{{ toy.image.url }}" alt="{{ toy.title }}">
+                {% else %}
+                    <div class="no-image">🧸</div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ toy.title }}</h5>
+                    <p class="card-text text-muted small">
+                        {{ toy.brand.name }} • {{ toy.year }}
+                    </p>
+                    <p class="card-text fw-bold text-primary">{{ toy.estimated_price }} ₽</p>
+                    <a href="{% url 'toy_detail' toy.slug %}" class="btn btn-outline-primary btn-sm">
+                        Подробнее <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                Игрушек пока нет. Добавьте через <a href="/admin/">админ-панель</a>.
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
