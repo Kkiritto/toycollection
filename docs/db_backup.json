@@ -1,0 +1,28 @@
+[
+{
+  "model": "auth.user",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$1200000$3ukkqND1FGdaVNTCPI9gyb$oHfQI+ilzVEntYS8kWBTBAYEt7p0RbEqGY6XmepFOXc=",
+    "last_login": "2026-05-24T07:18:44.102Z",
+    "is_superuser": true,
+    "username": "kirill",
+    "first_name": "",
+    "last_name": "",
+    "email": "sale200607@mail.ru",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2026-05-24T07:17:17.882Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "9qxwvdnkvwaaide5im6di7zt2tauh2pf",
+  "fields": {
+    "session_data": ".eJxVjLsOwjAMAP_FM4rSJilxR_Z-Q-XYDimgRupjQvw7qtQB1rvTvWGkfSvjvuoyTgI9NHD5ZYn4qfMh5EHzvRqu87ZMyRyJOe1qhir6up3t36DQWqAH32Lno2SXHWpWJkotd01CkYQudD54RiuNjeivwskSqobAIUfbZvHw-QL4rzhz:1wR36i:SvwxmjzIqKrZYNAamhKzUDqiyZslT156sliGYZjD9KY",
+    "expire_date": "2026-06-07T07:18:44.106Z"
+  }
+}
+]
