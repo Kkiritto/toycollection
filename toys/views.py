@@ -1,6 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import login
+from django.contrib import messages
 from django.db.models import Q
 from .models import Toy, Brand, Category
+from .forms import RegisterForm
 
 
 def home(request):
@@ -49,5 +52,23 @@ def toy_list(request):
 
 
 def toy_detail(request, slug):
-    toy = get_object_or_404(Toy.objects.select_related('brand', 'category'), slug=slug)
+    toy = get_object_or_404(
+        Toy.objects.select_related('brand', 'category'), slug=slug
+    )
     return render(request, 'toys/toy_detail.html', {'toy': toy})
+
+
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, f'Добро пожаловать, {user.username}!')
+            return redirect('home')
+    else:
+        form = RegisterForm()
+    return render(request, 'registration/register.html', {'form': form})
