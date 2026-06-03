@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Моя коллекция — ToyVault{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Моя коллекция</h1>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm p-4 text-center">
+            <h2 class="display-5 text-primary mb-0">{{ total_items }}</h2>
+            <p class="text-muted mb-0">Игрушек в коллекции</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm p-4 text-center">
+            <h2 class="display-5 text-success mb-0">{{ total_value }} ₽</h2>
+            <p class="text-muted mb-0">Общая стоимость покупок</p>
+        </div>
+    </div>
+</div>
+
+{% if items %}
+    <div class="row g-4">
+        {% for item in items %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card toy-card h-100 shadow-sm position-relative">
+                    <span class="badge bg-warning rarity-badge">
+                        {{ item.toy.get_rarity_display }}
+                    </span>
+                    {% if item.toy.image %}
+                        <img src="{{ item.toy.image.url }}" alt="{{ item.toy.title }}">
+                    {% else %}
+                        <div class="no-image"></div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.toy.title }}</h5>
+                        <p class="card-text text-muted small">
+                            {{ item.toy.brand.name }} • {{ item.toy.year }}
+                        </p>
+
+                        <ul class="list-unstyled small mb-3">
+                            <li><strong>Состояние:</strong> {{ item.get_personal_condition_display }}</li>
+                            {% if item.purchase_price %}
+                                <li><strong>Цена покупки:</strong> {{ item.purchase_price }} ₽</li>
+                            {% endif %}
+                            {% if item.purchase_date %}
+                                <li><strong>Дата покупки:</strong> {{ item.purchase_date }}</li>
+                            {% endif %}
+                        </ul>
+
+                        {% if item.notes %}
+                            <p class="card-text small fst-italic text-muted">
+                                "{{ item.notes }}"
+                            </p>
+                        {% endif %}
+
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'toy_detail' item.toy.slug %}" class="btn btn-outline-primary btn-sm flex-grow-1">
+                                Подробнее
+                            </a>
+                            <form method="post" action="{% url 'remove_from_collection' item.id %}"
+                                  onsubmit="return confirm('Удалить из коллекции?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    Удалить
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info text-center py-5">
+        <h4>Коллекция пока пуста</h4>
+        <p>Найдите интересные игрушки в каталоге и добавьте в свою коллекцию.</p>
+        <a href="{% url 'toy_list' %}" class="btn btn-primary mt-2">Перейти в каталог</a>
+    </div>
+{% endif %}
+{% endblock %}

@@ -56,7 +56,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">
-                🧸 ToyVault
+                 ToyVault
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar">
                 <span class="navbar-toggler-icon"></span>
@@ -69,6 +69,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'toy_list' %}"><i class="bi bi-grid"></i> Каталог</a>
                     </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_collection' %}">
+                            <i class="bi bi-bookmark-heart"></i> Моя коллекция
+                        </a>
+                    </li>
+{% endif %}
                 </ul>
                <ul class="navbar-nav">
                 {% if user.is_authenticated %}
@@ -113,7 +120,7 @@
 
     <footer>
         <div class="container">
-            <p class="mb-0">© 2025 ToyVault — Управление коллекцией игрушек 🧸</p>
+            <p class="mb-0">© 2025 ToyVault — Управление коллекцией игрушек </p>
         </div>
     </footer>
 

@@ -53,9 +53,20 @@
             <p class="mb-0">{{ toy.description }}</p>
         </div>
 
-        <a href="{% url 'toy_list' %}" class="btn btn-outline-secondary mt-4">
-            <i class="bi bi-arrow-left"></i> Назад к каталогу
+        <div class="d-flex gap-2 mt-4">
+    {% if user.is_authenticated %}
+        <a href="{% url 'add_to_collection' toy.slug %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Добавить в мою коллекцию
         </a>
+    {% else %}
+        <a href="{% url 'login' %}" class="btn btn-success">
+            <i class="bi bi-box-arrow-in-right"></i> Войти, чтобы добавить
+        </a>
+    {% endif %}
+    <a href="{% url 'toy_list' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Назад к каталогу
+    </a>
+</div>
     </div>
 </div>
 {% endblock %}

@@ -4,6 +4,10 @@ from django.contrib import messages
 from django.db.models import Q
 from .models import Toy, Brand, Category
 from .forms import RegisterForm
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from .models import CollectionItem
+from .forms import CollectionItemForm
 
 
 def home(request):
@@ -72,3 +76,56 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
+
+
+
+@login_required
+def my_collection(request):
+    items = CollectionItem.objects.select_related(
+        'toy', 'toy__brand', 'toy__category'
+    ).filter(user=request.user)
+
+    total_items = items.count()
+    total_value = items.aggregate(total=Sum('purchase_price'))['total'] or 0
+
+    return render(request, 'toys/my_collection.html', {
+        'items': items,
+        'total_items': total_items,
+        'total_value': total_value,
+    })
+
+
+@login_required
+def add_to_collection(request, slug):
+    toy = get_object_or_404(Toy, slug=slug)
+
+    if CollectionItem.objects.filter(user=request.user, toy=toy).exists():
+        messages.warning(request, 'Эта игрушка уже в вашей коллекции!')
+        return redirect('toy_detail', slug=slug)
+
+    if request.method == 'POST':
+        form = CollectionItemForm(request.POST)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.user = request.user
+            item.toy = toy
+            item.save()
+            messages.success(request, f'«{toy.title}» добавлена в коллекцию!')
+            return redirect('my_collection')
+    else:
+        form = CollectionItemForm()
+
+    return render(request, 'toys/add_to_collection.html', {
+        'form': form,
+        'toy': toy,
+    })
+
+
+@login_required
+def remove_from_collection(request, item_id):
+    item = get_object_or_404(CollectionItem, id=item_id, user=request.user)
+    if request.method == 'POST':
+        toy_title = item.toy.title
+        item.delete()
+        messages.success(request, f'«{toy_title}» удалена из коллекции.')
+    return redirect('my_collection')

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавить в коллекцию — {{ toy.title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow border-0">
+            <div class="card-body p-4">
+                <h2 class="mb-4">Добавить в коллекцию</h2>
+
+                <div class="alert alert-light border">
+                    <strong>{{ toy.title }}</strong><br>
+                    <small class="text-muted">
+                        {{ toy.brand.name }} • {{ toy.category.name }} • {{ toy.year }}
+                    </small>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Состояние вашего экземпляра</label>
+                        {{ form.personal_condition }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Цена покупки (₽)</label>
+                        {{ form.purchase_price }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Дата покупки</label>
+                        {{ form.purchase_date }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Заметки</label>
+                        {{ form.notes }}
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-grow-1">
+                            Добавить в коллекцию
+                        </button>
+                        <a href="{% url 'toy_detail' toy.slug %}" class="btn btn-outline-secondary">
+                            Отмена
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
